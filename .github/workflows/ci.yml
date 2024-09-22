@@ -77,8 +77,14 @@ jobs:
             <servers>
               <server>
                 <id>github</id>
-                <username>USERNAME</username>
-                <password>TOKEN</password>
+                <configuration>
+                  <httpHeaders>
+                    <property>
+                      <name>Authorization</name>
+                      <value>Bearer ${{ secrets.GITHUB_TOKEN }}</value>
+                    </property>
+                  </httpHeaders>
+               </configuration>
               </server>
             </servers>
           </settings>
