@@ -9,16 +9,23 @@ wget https://dlcdn.apache.org/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bi
 
 sudo tar xf apache-maven-3.9.9-bin.tar.gz -C /opt
 
+# Set JAVA_HOME
+export JAVA_HOME=/usr/lib/jvm/default-java
+export PATH=$JAVA_HOME/bin:$PATH
 
-echo 'export JAVA_HOME=/usr/lib/jvm/default-java' >> ~/etc/profile.d/maven.sh
-echo 'export M3_HOME=/opt/apache-maven-3.9.9' >> ~/etc/profile.d/maven.sh
-echo 'export MAVEN_HOME=/opt/apache-maven-3.9.9' >> ~/etc/profile.d/maven.sh
-echo 'export PATH=${M3_HOME}/bin:${PATH}' >> ~/etc/profile.d/maven.sh
+# Set MAVEN_HOME (Maven)
+export MAVEN_HOME=/opt/apache-maven-3.9.9
+export M3_HOME=$MAVEN_HOME
+export PATH=$MAVEN_HOME/bin:$PATH
 
+# Display the variables for confirmation
+echo "JAVA_HOME is set to: $JAVA_HOME"
+echo "MAVEN_HOME is set to: $MAVEN_HOME"
+echo "M3_HOME is set to: $M3_HOME"
 
-sudo chmod +x /etc/profile.d/maven.sh
+sudo chmod +x ~/.bashrc
 
-source /etc/profile.d/maven.sh
+source ~/.bashrc
 
 mvn -version
 
