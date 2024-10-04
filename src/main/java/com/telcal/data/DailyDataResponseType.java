@@ -168,4 +168,12 @@ public class DailyDataResponseType {
 		this.occasion = occasion;
 	}
 
+	@Override
+	public String toString() {
+		return "DailyDataResponseType [id=" + id + ", date=" + date + ", samvathsaram=" + samvathsaram + ", ayanam="
+				+ ayanam + ", ruthuvu=" + ruthuvu + ", month=" + month + ", day=" + day + ", maasam=" + maasam
+				+ ", paksham=" + paksham + ", thidhi=" + thidhi + ", nakshatram=" + nakshatram + ", thidhi_from="
+				+ thidhi_from + ", thidhi_to=" + thidhi_to + ", nakshatram_from=" + nakshatram_from + ", nakshatram_to="
+				+ nakshatram_to + ", sunrise=" + sunrise + ", sunset=" + sunset + ", occasion=" + occasion + "]";
+	}
 }
