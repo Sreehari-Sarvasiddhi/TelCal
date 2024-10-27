@@ -1,28 +1,25 @@
 package com.telcal.data;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 public class DailyDataResponseType {
-	private Long id;
-	private LocalDate date;
-	private String samvathsaram;
-	private String ayanam;
-	private String ruthuvu;
-	private String month;
-	private String day;
-	private String maasam;
-	private String paksham;
-	private String thidhi;
-	private String nakshatram;
-	private LocalDateTime thidhi_from;
-	private LocalDateTime thidhi_to;
-	private LocalDateTime nakshatram_from;
-	private LocalDateTime nakshatram_to;
-	private LocalTime sunrise;
-	private LocalTime sunset;
-	private String occasion;
+	private Long id = -999L;
+	private String date = "";
+	private String samvathsaram = "";
+	private String ayanam = "";
+	private String ruthuvu = "";
+	private String month = "";
+	private String day = "";
+	private String maasam = "";
+	private String paksham = "";
+	private String thidhi = "";
+	private String nakshatram = "";
+	private String thidhi_from = "";
+	private String thidhi_to = "";
+	private String nakshatram_from = "";
+	private String nakshatram_to = "";
+	private String sunrise = "";
+	private String sunset = "";
+	private String occasion = "";
+	private String error = "";
 
 	public Long getId() {
 		return id;
@@ -32,11 +29,11 @@ public class DailyDataResponseType {
 		this.id = id;
 	}
 
-	public LocalDate getDate() {
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDate date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -112,51 +109,51 @@ public class DailyDataResponseType {
 		this.nakshatram = nakshatram;
 	}
 
-	public LocalDateTime getThidhi_from() {
+	public String getThidhi_from() {
 		return thidhi_from;
 	}
 
-	public void setThidhi_from(LocalDateTime thidhi_from) {
+	public void setThidhi_from(String thidhi_from) {
 		this.thidhi_from = thidhi_from;
 	}
 
-	public LocalDateTime getThidhi_to() {
+	public String getThidhi_to() {
 		return thidhi_to;
 	}
 
-	public void setThidhi_to(LocalDateTime thidhi_to) {
+	public void setThidhi_to(String thidhi_to) {
 		this.thidhi_to = thidhi_to;
 	}
 
-	public LocalDateTime getNakshatram_from() {
+	public String getNakshatram_from() {
 		return nakshatram_from;
 	}
 
-	public void setNakshatram_from(LocalDateTime nakshatram_from) {
+	public void setNakshatram_from(String nakshatram_from) {
 		this.nakshatram_from = nakshatram_from;
 	}
 
-	public LocalDateTime getNakshatram_to() {
+	public String getNakshatram_to() {
 		return nakshatram_to;
 	}
 
-	public void setNakshatram_to(LocalDateTime nakshatram_to) {
+	public void setNakshatram_to(String nakshatram_to) {
 		this.nakshatram_to = nakshatram_to;
 	}
 
-	public LocalTime getSunrise() {
+	public String getSunrise() {
 		return sunrise;
 	}
 
-	public void setSunrise(LocalTime sunrise) {
+	public void setSunrise(String sunrise) {
 		this.sunrise = sunrise;
 	}
 
-	public LocalTime getSunset() {
+	public String getSunset() {
 		return sunset;
 	}
 
-	public void setSunset(LocalTime sunset) {
+	public void setSunset(String sunset) {
 		this.sunset = sunset;
 	}
 
@@ -168,12 +165,22 @@ public class DailyDataResponseType {
 		this.occasion = occasion;
 	}
 
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
+	}
+
 	@Override
 	public String toString() {
 		return "DailyDataResponseType [id=" + id + ", date=" + date + ", samvathsaram=" + samvathsaram + ", ayanam="
 				+ ayanam + ", ruthuvu=" + ruthuvu + ", month=" + month + ", day=" + day + ", maasam=" + maasam
 				+ ", paksham=" + paksham + ", thidhi=" + thidhi + ", nakshatram=" + nakshatram + ", thidhi_from="
 				+ thidhi_from + ", thidhi_to=" + thidhi_to + ", nakshatram_from=" + nakshatram_from + ", nakshatram_to="
-				+ nakshatram_to + ", sunrise=" + sunrise + ", sunset=" + sunset + ", occasion=" + occasion + "]";
+				+ nakshatram_to + ", sunrise=" + sunrise + ", sunset=" + sunset + ", occasion=" + occasion + ", error="
+				+ error + "]";
 	}
+
 }

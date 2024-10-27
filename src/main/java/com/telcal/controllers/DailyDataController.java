@@ -6,19 +6,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.telcal.data.DailyDataResponseType;
+import com.telcal.data.UserData;
 import com.telcal.entity.DailyData;
 import com.telcal.repositories.DailyDataRepo;
 import com.telcal.transformers.DailyDataTransformer;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
+@CrossOrigin
 public class DailyDataController {
 
 	@Autowired
@@ -49,25 +57,93 @@ public class DailyDataController {
 	}
 
 	@PostMapping("/getDataByDate")
+	@CrossOrigin(originPatterns = { "*://*/*" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+			RequestMethod.DELETE }, allowedHeaders = { "Content-Type", "Accept", "X-Requested-With",
+					"Authorization" }, exposedHeaders = { "Location", "Content-Disposition", "Content-Type", "Accept",
+							"Authorization" }, maxAge = 3600, allowCredentials = "true")
+
 	public ResponseEntity<DailyDataResponseType> getdataByDate(@RequestHeader("x-lang") String lang,
-			@RequestBody String date) throws Exception {
-		System.out.printf("Get Data By Date : {}", date);
+			@RequestBody UserData user, HttpServletRequest httpRequest) throws Exception {
+		String date = user.getDate();
+		System.out.println("Get Data By Date : " + date);
 
-		List<DailyDataResponseType> response = getAllObjectsList(lang).stream()
-				.filter(k -> date.equals(convertDateToString(k.getDate()))).toList();
+		String origin = "*";
 
-		return ResponseEntity.ok(response.get(0));
+		if (!httpRequest.getHeader("Access-Control-Allow-Origin").isEmpty())
+			origin = httpRequest.getHeader("Access-Control-Allow-Origin").toString();
+
+		System.out.println("origin being passed as  " + origin);
+
+//		List<DailyDataResponseType> response = getAllObjectsList(lang).stream()
+//				.filter(k -> date.equals(convertDateStringFormat(k.getDate()))).toList();
+
+		DailyDataResponseType response = transformer
+				.transformResponse(repo.findByDate(convertStringtoLocalDate(convertDateStringFormat(date))), lang);
+
+		if (response.getId() == -999L) {
+			DailyDataResponseType resp = new DailyDataResponseType();
+			resp.setDate(convertDateStringFormat(date));
+			resp.setError("No Data Found");
+			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(resp);
+		} else {
+			response.setError("");
+			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(response);
+		}
 	}
 
-	private String convertDateToString(LocalDate localDate) {
+	private LocalDate convertStringtoLocalDate(String dateString) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-		return localDate.format(formatter);
+		LocalDate localDate = LocalDate.parse(dateString, formatter);
+		return localDate;
+	}
 
+	private String convertDateStringFormat(String dateString) {
+
+		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
+		LocalDate date = LocalDate.parse(dateString, inputFormatter);
+		String formattedDate = date.format(outputFormatter);
+
+		System.out.println(formattedDate);
+
+		return formattedDate;
 	}
 
 	private List<DailyDataResponseType> getAllObjectsList(String lang) throws Exception {
 		return getAllDailyDataList(lang).getBody();
+	}
+
+	@PostMapping("/getDataForMonth/{month}/{year}")
+	public ResponseEntity<List<DailyDataResponseType>> getdataForMonth(@RequestHeader("x-lang") String lang,
+			@PathVariable int month, @PathVariable int year) {
+
+		System.out.printf("input received " + month + " - " + year + "  :: ");
+
+		List<DailyData> resp = repo.getDataForMonth(month, year);
+
+		List<DailyDataResponseType> response = new ArrayList<>();
+
+		resp.forEach(k -> response.add(transformer.transformResponse(k, lang)));
+
+		return ResponseEntity.ok(response);
+	}
+
+	public HttpHeaders getCorHeaders(String origin) {
+		HttpHeaders headers = new HttpHeaders();
+
+		headers.add(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+		headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+		headers.add("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, Authorization");
+		headers.add("Access-Control-Expose-Headers",
+				"Location, Content-Disposition, Content-Type, Accept, Authorization");
+		headers.add("Access-Control-Max-Age", "3600");
+		headers.add("Access-Control-Allow-Credentials", "true");
+
+		headers.add("Access-Control-Allow-Origin", origin);
+		return headers;
+
 	}
 
 }
