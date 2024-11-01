@@ -88,6 +88,10 @@ public class DailyDataTransformer {
 			response.setThidhi_to(convertLocalDateTimeToString(dailyData.getT_thidhi_to()));
 			response.setSunrise(convertLocalTimeToString(dailyData.getSunrise()));
 			response.setSunset(convertLocalTimeToString(dailyData.getSunset()));
+
+			response.setThidhi_full(dailyData.getT_thidhi_full());
+			response.setNakshatram_ful(dailyData.getT_nakshatram_ful());
+
 			response.setOccasion(dailyData.getOccasion());
 		}
 
@@ -95,33 +99,43 @@ public class DailyDataTransformer {
 	}
 
 	private String convertLocalDateToString(LocalDate date) {
+		if (date != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			String formattedDate = date.format(formatter);
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		String formattedDate = date.format(formatter);
+			System.out.println(formattedDate);
 
-		System.out.println(formattedDate);
+			return formattedDate;
+		}
 
-		return formattedDate;
+		return "";
 
 	}
 
 	private String convertLocalDateTimeToString(LocalDateTime date) {
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		String formattedDateTime = date.format(formatter);
-		System.out.println(formattedDateTime);
+		if (date != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+			String formattedDateTime = date.format(formatter);
+			System.out.println(formattedDateTime);
 
-		return formattedDateTime;
+			return formattedDateTime;
+		}
+
+		return "";
 
 	}
 
 	private String convertLocalTimeToString(LocalTime time) {
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-		String formattedTime = time.format(formatter);
-		System.out.println(formattedTime);
+		if (time != null) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+			String formattedTime = time.format(formatter);
+			System.out.println(formattedTime);
 
-		return formattedTime;
+			return formattedTime;
+		}
+		return "";
 
 	}
 

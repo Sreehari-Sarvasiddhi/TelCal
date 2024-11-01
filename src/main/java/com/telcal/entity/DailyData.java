@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -24,13 +25,21 @@ public class DailyData {
 	private Long t_paksham_id;
 	private Long t_thidhi_id;
 	private Long t_nakshatram_id;
+
+	@Nullable
 	private LocalDateTime t_thidhi_from;
+	@Nullable
 	private LocalDateTime t_thidhi_to;
+	@Nullable
 	private LocalDateTime t_nakshatram_from;
+	@Nullable
 	private LocalDateTime t_nakshatram_to;
 	private LocalTime sunrise;
 	private LocalTime sunset;
 	private String occasion;
+
+	private String t_thidhi_full;
+	private String t_nakshatram_ful;
 
 	public Long getId() {
 		return id;
@@ -176,6 +185,22 @@ public class DailyData {
 		this.occasion = occasion;
 	}
 
+	public String getT_thidhi_full() {
+		return t_thidhi_full;
+	}
+
+	public void setT_thidhi_full(String t_thidhi_full) {
+		this.t_thidhi_full = t_thidhi_full;
+	}
+
+	public String getT_nakshatram_ful() {
+		return t_nakshatram_ful;
+	}
+
+	public void setT_nakshatram_ful(String t_nakshatram_ful) {
+		this.t_nakshatram_ful = t_nakshatram_ful;
+	}
+
 	@Override
 	public String toString() {
 		return "DailyData [id=" + id + ", date=" + date + ", t_samvathsaram_id=" + t_samvathsaram_id + ", t_ayanam_id="
@@ -183,7 +208,8 @@ public class DailyData {
 				+ e_day_id + ", t_maasam_id=" + t_maasam_id + ", t_paksham_id=" + t_paksham_id + ", t_thidhi_id="
 				+ t_thidhi_id + ", t_nakshatram_id=" + t_nakshatram_id + ", t_thidhi_from=" + t_thidhi_from
 				+ ", t_thidhi_to=" + t_thidhi_to + ", t_nakshatram_from=" + t_nakshatram_from + ", t_nakshatram_to="
-				+ t_nakshatram_to + ", sunrise=" + sunrise + ", sunset=" + sunset + ", occasion=" + occasion + "]";
+				+ t_nakshatram_to + ", sunrise=" + sunrise + ", sunset=" + sunset + ", occasion=" + occasion
+				+ ", t_thidhi_full=" + t_thidhi_full + ", t_nakshatram_ful=" + t_nakshatram_ful + "]";
 	}
 
 }

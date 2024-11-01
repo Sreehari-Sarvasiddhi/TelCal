@@ -14,8 +14,10 @@ public class DailyDataResponseType {
 	private String nakshatram = "";
 	private String thidhi_from = "";
 	private String thidhi_to = "";
+	private String thidhi_full = "";
 	private String nakshatram_from = "";
 	private String nakshatram_to = "";
+	private String nakshatram_ful = "";
 	private String sunrise = "";
 	private String sunset = "";
 	private String occasion = "";
@@ -173,14 +175,30 @@ public class DailyDataResponseType {
 		this.error = error;
 	}
 
+	public String getThidhi_full() {
+		return thidhi_full;
+	}
+
+	public void setThidhi_full(String thidhi_full) {
+		this.thidhi_full = thidhi_full;
+	}
+
+	public String getNakshatram_ful() {
+		return nakshatram_ful;
+	}
+
+	public void setNakshatram_ful(String nakshatram_ful) {
+		this.nakshatram_ful = nakshatram_ful;
+	}
+
 	@Override
 	public String toString() {
 		return "DailyDataResponseType [id=" + id + ", date=" + date + ", samvathsaram=" + samvathsaram + ", ayanam="
 				+ ayanam + ", ruthuvu=" + ruthuvu + ", month=" + month + ", day=" + day + ", maasam=" + maasam
 				+ ", paksham=" + paksham + ", thidhi=" + thidhi + ", nakshatram=" + nakshatram + ", thidhi_from="
-				+ thidhi_from + ", thidhi_to=" + thidhi_to + ", nakshatram_from=" + nakshatram_from + ", nakshatram_to="
-				+ nakshatram_to + ", sunrise=" + sunrise + ", sunset=" + sunset + ", occasion=" + occasion + ", error="
-				+ error + "]";
+				+ thidhi_from + ", thidhi_to=" + thidhi_to + ", thidhi_full=" + thidhi_full + ", nakshatram_from="
+				+ nakshatram_from + ", nakshatram_to=" + nakshatram_to + ", nakshatram_ful=" + nakshatram_ful
+				+ ", sunrise=" + sunrise + ", sunset=" + sunset + ", occasion=" + occasion + ", error=" + error + "]";
 	}
 
 }

@@ -18,6 +18,6 @@ public interface DailyDataRepo extends JpaRepository<DailyData, Long> {
 	List<DailyData> getDataForMonth(@Param("month") int month, @Param("year") int year);
 
 	@Query(value = "SELECT e FROM DailyData e WHERE date = :date")
-	DailyData findByDate(LocalDate date);
+	List<DailyData> findByDate(LocalDate date);
 
 }

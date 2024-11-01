@@ -62,7 +62,7 @@ public class DailyDataController {
 					"Authorization" }, exposedHeaders = { "Location", "Content-Disposition", "Content-Type", "Accept",
 							"Authorization" }, maxAge = 3600, allowCredentials = "true")
 
-	public ResponseEntity<DailyDataResponseType> getdataByDate(@RequestHeader("x-lang") String lang,
+	public ResponseEntity<List<DailyDataResponseType>> getdataByDate(@RequestHeader("x-lang") String lang,
 			@RequestBody UserData user, HttpServletRequest httpRequest) throws Exception {
 		String date = user.getDate();
 		System.out.println("Get Data By Date : " + date);
@@ -74,19 +74,21 @@ public class DailyDataController {
 
 		System.out.println("origin being passed as  " + origin);
 
-//		List<DailyDataResponseType> response = getAllObjectsList(lang).stream()
-//				.filter(k -> date.equals(convertDateStringFormat(k.getDate()))).toList();
+		List<DailyData> repoResult = repo.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
 
-		DailyDataResponseType response = transformer
-				.transformResponse(repo.findByDate(convertStringtoLocalDate(convertDateStringFormat(date))), lang);
+		List<DailyDataResponseType> response = new ArrayList<>();
 
-		if (response.getId() == -999L) {
+		repoResult.forEach(k -> response.add(transformer.transformResponse(k, lang)));
+
+		if (response.size() == 0) {
+			List<DailyDataResponseType> respList = new ArrayList<>();
 			DailyDataResponseType resp = new DailyDataResponseType();
 			resp.setDate(convertDateStringFormat(date));
 			resp.setError("No Data Found");
-			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(resp);
+			respList.add(resp);
+			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(respList);
 		} else {
-			response.setError("");
+			response.forEach(k -> k.setError(""));
 			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(response);
 		}
 	}
