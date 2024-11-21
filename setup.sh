@@ -12,5 +12,5 @@ mvn clean install
 
 cd target
 
-nohup java -jar TelCal-0.0.1-SNAPSHOT.jar&
+nohup java -jar TelCal-0.0.1.jar&
 

@@ -10,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.telcal.data.DailyDataResponseType;
 import com.telcal.data.UserData;
 import com.telcal.entity.DailyData;
+import com.telcal.entity.DailyDataView;
 import com.telcal.repositories.DailyDataRepo;
+import com.telcal.repositories.DailyDataViewRepo;
 import com.telcal.transformers.DailyDataTransformer;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +32,9 @@ public class DailyDataController {
 
 	@Autowired
 	DailyDataRepo repo;
+
+	@Autowired
+	DailyDataViewRepo dailyDaataViewRepo;
 
 	@Autowired
 	DailyDataTransformer transformer;
@@ -117,19 +121,57 @@ public class DailyDataController {
 		return getAllDailyDataList(lang).getBody();
 	}
 
-	@PostMapping("/getDataForMonth/{month}/{year}")
-	public ResponseEntity<List<DailyDataResponseType>> getdataForMonth(@RequestHeader("x-lang") String lang,
-			@PathVariable int month, @PathVariable int year) {
+//	@PostMapping("/getDataForMonth/{month}/{year}")
+//	public ResponseEntity<List<DailyDataResponseType>> getdataForMonth(@RequestHeader("x-lang") String lang,
+//			@PathVariable int month, @PathVariable int year) {
+//
+//		System.out.printf("input received " + month + " - " + year + "  :: ");
+//
+//		List<DailyData> resp = repo.getDataForMonth(month, year);
+//
+//		List<DailyDataResponseType> response = new ArrayList<>();
+//
+//		resp.forEach(k -> response.add(transformer.transformResponse(k, lang)));
+//
+//		return ResponseEntity.ok(response);
+//	}
 
-		System.out.printf("input received " + month + " - " + year + "  :: ");
+	@PostMapping("/getTransoformedDataByDate")
+	@CrossOrigin(originPatterns = { "*://*/*" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+			RequestMethod.DELETE }, allowedHeaders = { "Content-Type", "Accept", "X-Requested-With",
+					"Authorization" }, exposedHeaders = { "Location", "Content-Disposition", "Content-Type", "Accept",
+							"Authorization" }, maxAge = 3600, allowCredentials = "true")
 
-		List<DailyData> resp = repo.getDataForMonth(month, year);
+	public ResponseEntity<List<DailyDataView>> getTransformedDataByDate(@RequestHeader("x-lang") String lang,
+			@RequestBody UserData user, HttpServletRequest httpRequest) throws Exception {
+		String date = user.getDate();
+		System.out.println("Get Data By Date : " + date);
 
-		List<DailyDataResponseType> response = new ArrayList<>();
+		String origin = "*";
 
-		resp.forEach(k -> response.add(transformer.transformResponse(k, lang)));
+		if (!httpRequest.getHeader("Access-Control-Allow-Origin").isEmpty())
+			origin = httpRequest.getHeader("Access-Control-Allow-Origin").toString();
 
-		return ResponseEntity.ok(response);
+		System.out.println("origin being passed as  " + origin);
+
+		List<DailyDataView> repoResult = dailyDaataViewRepo
+				.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
+
+//		List<DailyDataResponseType> response = new ArrayList<>();
+//
+//		repoResult.forEach(k -> response.add(transformer.transformResponse(k, lang)));
+
+		if (repoResult.size() == 0) {
+			List<DailyDataView> respList = new ArrayList<>();
+			DailyDataView resp = new DailyDataView();
+			resp.setDate(convertStringtoLocalDate(convertDateStringFormat(date)));
+			resp.setError("No Data Found");
+			respList.add(resp);
+			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(respList);
+		} else {
+			repoResult.forEach(k -> k.setError(""));
+			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(repoResult);
+		}
 	}
 
 	public HttpHeaders getCorHeaders(String origin) {
