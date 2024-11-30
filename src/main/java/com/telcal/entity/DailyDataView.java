@@ -3,6 +3,7 @@ package com.telcal.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.telcal.transformers.DateStringConverter;
 import com.telcal.transformers.LocalDateToStringConverter;
 
 import jakarta.persistence.Entity;
@@ -31,6 +32,25 @@ public class DailyDataView {
 
 	private LocalDateTime thidhi_from;
 	private LocalDateTime thidhi_to;
+
+	@Transient
+	private LocalDateTime thidhi_from_en;
+	@Transient
+	private LocalDateTime thidhi_to_en;
+	@Transient
+	private LocalDateTime thidhi_from_te;
+	@Transient
+	private LocalDateTime thidhi_to_te;
+
+	@Transient
+	private LocalDateTime nakshatram_from_en;
+	@Transient
+	private LocalDateTime nakshatram_to_en;
+	@Transient
+	private LocalDateTime nakshatram_from_te;
+	@Transient
+	private LocalDateTime nakshatram_to_te;
+
 	private String thidhi_full;
 	private LocalDateTime nakshatram_from;
 	private LocalDateTime nakshatram_to;
@@ -297,11 +317,77 @@ public class DailyDataView {
 		this.nakshatram_peru = nakshatram_peru;
 	}
 
+	public String getThidhi_from_en() {
+		return DateStringConverter.convertToOrdinalString(this, thidhi_from, true);
+	}
+
+	public void setThidhi_from_en(LocalDateTime thidhi_from_en) {
+		this.thidhi_from_en = thidhi_from_en;
+	}
+
+	public String getThidhi_to_en() {
+		return DateStringConverter.convertToOrdinalString(this, thidhi_to, true);
+	}
+
+	public void setThidhi_to_en(LocalDateTime thidhi_to_en) {
+		this.thidhi_to_en = thidhi_to_en;
+	}
+
+	public String getThidhi_from_te() {
+		return DateStringConverter.convertToOrdinalString(this, thidhi_from, false);
+	}
+
+	public void setThidhi_from_te(LocalDateTime thidhi_from_te) {
+		this.thidhi_from_te = thidhi_from_te;
+	}
+
+	public String getThidhi_to_te() {
+		return DateStringConverter.convertToOrdinalString(this, thidhi_to, false);
+	}
+
+	public void setThidhi_to_te(LocalDateTime thidhi_to_te) {
+		this.thidhi_to_te = thidhi_to_te;
+	}
+
+	// -----
+
 	private String checkAndGet(String input) {
 		if (input == null) {
 			return "";
 		}
 		return input;
+	}
+
+	public String getNakshatram_from_en() {
+		return DateStringConverter.convertToOrdinalString(this, nakshatram_from_en, true);
+	}
+
+	public void setNakshatram_from_en(LocalDateTime nakshatram_from_en) {
+		this.nakshatram_from_en = nakshatram_from_en;
+	}
+
+	public String getNakshatram_to_en() {
+		return DateStringConverter.convertToOrdinalString(this, nakshatram_to_en, true);
+	}
+
+	public void setNakshatram_to_en(LocalDateTime nakshatram_to_en) {
+		this.nakshatram_to_en = nakshatram_to_en;
+	}
+
+	public String getNakshatram_from_te() {
+		return DateStringConverter.convertToOrdinalString(this, nakshatram_from_te, false);
+	}
+
+	public void setNakshatram_from_te(LocalDateTime nakshatram_from_te) {
+		this.nakshatram_from_te = nakshatram_from_te;
+	}
+
+	public String getNakshatram_to_te() {
+		return DateStringConverter.convertToOrdinalString(this, nakshatram_to_te, false);
+	}
+
+	public void setNakshatram_to_te(LocalDateTime nakshatram_to_te) {
+		this.nakshatram_to_te = nakshatram_to_te;
 	}
 
 }
