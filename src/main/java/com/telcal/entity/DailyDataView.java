@@ -359,7 +359,7 @@ public class DailyDataView {
 	}
 
 	public String getNakshatram_from_en() {
-		return DateStringConverter.convertToOrdinalString(this, nakshatram_from_en, true);
+		return DateStringConverter.convertToOrdinalString(this, nakshatram_from, true);
 	}
 
 	public void setNakshatram_from_en(LocalDateTime nakshatram_from_en) {
@@ -367,7 +367,7 @@ public class DailyDataView {
 	}
 
 	public String getNakshatram_to_en() {
-		return DateStringConverter.convertToOrdinalString(this, nakshatram_to_en, true);
+		return DateStringConverter.convertToOrdinalString(this, nakshatram_to, true);
 	}
 
 	public void setNakshatram_to_en(LocalDateTime nakshatram_to_en) {
@@ -375,7 +375,7 @@ public class DailyDataView {
 	}
 
 	public String getNakshatram_from_te() {
-		return DateStringConverter.convertToOrdinalString(this, nakshatram_from_te, false);
+		return DateStringConverter.convertToOrdinalString(this, nakshatram_from, false);
 	}
 
 	public void setNakshatram_from_te(LocalDateTime nakshatram_from_te) {
@@ -383,7 +383,7 @@ public class DailyDataView {
 	}
 
 	public String getNakshatram_to_te() {
-		return DateStringConverter.convertToOrdinalString(this, nakshatram_to_te, false);
+		return DateStringConverter.convertToOrdinalString(this, nakshatram_to, false);
 	}
 
 	public void setNakshatram_to_te(LocalDateTime nakshatram_to_te) {
