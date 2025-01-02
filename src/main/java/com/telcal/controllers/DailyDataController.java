@@ -18,10 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.telcal.data.DailyDataResponseType;
 import com.telcal.data.UserData;
+import com.telcal.entity.Amrutham;
 import com.telcal.entity.DailyData;
 import com.telcal.entity.DailyDataView;
+import com.telcal.entity.Durmuhurtham;
+import com.telcal.entity.Varjyam;
+import com.telcal.repositories.AmruthamRepo;
 import com.telcal.repositories.DailyDataRepo;
 import com.telcal.repositories.DailyDataViewRepo;
+import com.telcal.repositories.DurmuhurthamRepo;
+import com.telcal.repositories.VarjyamRepo;
 import com.telcal.transformers.DailyDataTransformer;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,6 +41,15 @@ public class DailyDataController {
 
 	@Autowired
 	DailyDataViewRepo dailyDaataViewRepo;
+
+	@Autowired
+	AmruthamRepo amruthamRepo;
+
+	@Autowired
+	VarjyamRepo varjyamRepo;
+
+	@Autowired
+	DurmuhurthamRepo durmuhurthamRepo;
 
 	@Autowired
 	DailyDataTransformer transformer;
@@ -121,21 +136,6 @@ public class DailyDataController {
 		return getAllDailyDataList(lang).getBody();
 	}
 
-//	@PostMapping("/getDataForMonth/{month}/{year}")
-//	public ResponseEntity<List<DailyDataResponseType>> getdataForMonth(@RequestHeader("x-lang") String lang,
-//			@PathVariable int month, @PathVariable int year) {
-//
-//		System.out.printf("input received " + month + " - " + year + "  :: ");
-//
-//		List<DailyData> resp = repo.getDataForMonth(month, year);
-//
-//		List<DailyDataResponseType> response = new ArrayList<>();
-//
-//		resp.forEach(k -> response.add(transformer.transformResponse(k, lang)));
-//
-//		return ResponseEntity.ok(response);
-//	}
-
 	@PostMapping("/getTransoformedDataByDate")
 	@CrossOrigin(originPatterns = { "*://*/*" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
 			RequestMethod.DELETE }, allowedHeaders = { "Content-Type", "Accept", "X-Requested-With",
@@ -157,9 +157,12 @@ public class DailyDataController {
 		List<DailyDataView> repoResult = dailyDaataViewRepo
 				.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
 
-//		List<DailyDataResponseType> response = new ArrayList<>();
-//
-//		repoResult.forEach(k -> response.add(transformer.transformResponse(k, lang)));
+		List<Amrutham> amruthamData = amruthamRepo.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
+
+		List<Varjyam> varjyamData = varjyamRepo.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
+
+		List<Durmuhurtham> durmuhurthamData = durmuhurthamRepo
+				.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
 
 		if (repoResult.size() == 0) {
 			List<DailyDataView> respList = new ArrayList<>();
@@ -169,7 +172,12 @@ public class DailyDataController {
 			respList.add(resp);
 			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(respList);
 		} else {
-			repoResult.forEach(k -> k.setError(""));
+			repoResult.forEach(k -> {
+				k.setError("");
+				k.setAmruthamList(amruthamData);
+				k.setVarjyamList(varjyamData);
+				k.setDurmuharthamList(durmuhurthamData);
+			});
 			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(repoResult);
 		}
 	}

@@ -2,6 +2,9 @@ package com.telcal.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+
+import org.antlr.v4.runtime.misc.NotNull;
 
 import com.telcal.transformers.DateStringConverter;
 import com.telcal.transformers.LocalDateToStringConverter;
@@ -9,6 +12,8 @@ import com.telcal.transformers.LocalDateToStringConverter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
 
 @Entity
@@ -18,6 +23,8 @@ public class DailyDataView {
 	@Id
 	private Long id;
 
+	@Temporal(TemporalType.DATE)
+	@NotNull
 	private LocalDate date;
 
 	private String samvathsaram;
@@ -68,6 +75,20 @@ public class DailyDataView {
 	private String paksham_peru;
 	private String thidhi_peru;
 	private String nakshatram_peru;
+
+	private String raahu_kaalam_from;
+	private String raahu_kaalam_to;
+	private String yama_gandam_from;
+	private String yama_gandam_to;
+
+	@Transient
+	private List<Amrutham> amruthamList;
+
+	@Transient
+	private List<Varjyam> varjyamList;
+
+	@Transient
+	private List<Durmuhurtham> durmuharthamList;
 
 	@Transient
 	private String error;
@@ -388,6 +409,62 @@ public class DailyDataView {
 
 	public void setNakshatram_to_te(LocalDateTime nakshatram_to_te) {
 		this.nakshatram_to_te = nakshatram_to_te;
+	}
+
+	public List<Amrutham> getAmruthamList() {
+		return amruthamList;
+	}
+
+	public void setAmruthamList(List<Amrutham> amruthamList) {
+		this.amruthamList = amruthamList;
+	}
+
+	public List<Varjyam> getVarjyamList() {
+		return varjyamList;
+	}
+
+	public void setVarjyamList(List<Varjyam> varjyamList) {
+		this.varjyamList = varjyamList;
+	}
+
+	public List<Durmuhurtham> getDurmuharthamList() {
+		return durmuharthamList;
+	}
+
+	public void setDurmuharthamList(List<Durmuhurtham> durmuharthamList) {
+		this.durmuharthamList = durmuharthamList;
+	}
+
+	public String getRaahu_kaalam_from() {
+		return raahu_kaalam_from;
+	}
+
+	public void setRaahu_kaalam_from(String raahu_kaalam_from) {
+		this.raahu_kaalam_from = raahu_kaalam_from;
+	}
+
+	public String getRaahu_kaalam_to() {
+		return raahu_kaalam_to;
+	}
+
+	public void setRaahu_kaalam_to(String raahu_kaalam_to) {
+		this.raahu_kaalam_to = raahu_kaalam_to;
+	}
+
+	public String getYama_gandam_from() {
+		return yama_gandam_from;
+	}
+
+	public void setYama_gandam_from(String yama_gandam_from) {
+		this.yama_gandam_from = yama_gandam_from;
+	}
+
+	public String getYama_gandam_to() {
+		return yama_gandam_to;
+	}
+
+	public void setYama_gandam_to(String yama_gandam_to) {
+		this.yama_gandam_to = yama_gandam_to;
 	}
 
 }
