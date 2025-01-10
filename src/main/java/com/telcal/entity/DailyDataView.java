@@ -2,9 +2,8 @@ package com.telcal.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
-
-import org.antlr.v4.runtime.misc.NotNull;
 
 import com.telcal.transformers.DateStringConverter;
 import com.telcal.transformers.LocalDateToStringConverter;
@@ -12,9 +11,8 @@ import com.telcal.transformers.LocalDateToStringConverter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.persistence.Transient;
+import util.DateTimeUtils;
 
 @Entity
 @Table(name = "transformed_daily_data")
@@ -23,8 +21,6 @@ public class DailyDataView {
 	@Id
 	private Long id;
 
-	@Temporal(TemporalType.DATE)
-	@NotNull
 	private LocalDate date;
 
 	private String samvathsaram;
@@ -39,6 +35,9 @@ public class DailyDataView {
 
 	private LocalDateTime thidhi_from;
 	private LocalDateTime thidhi_to;
+
+	private String day_desc_en;
+	private String day_desc_te;
 
 	@Transient
 	private LocalDateTime thidhi_from_en;
@@ -64,7 +63,9 @@ public class DailyDataView {
 	private String nakshatram_ful;
 	private String sunrise;
 	private String sunset;
-	private String occasion;
+
+	@Transient
+	private List<String> occasion;
 
 	private String samvathsaram_peru;
 	private String ayanam_peru;
@@ -82,13 +83,31 @@ public class DailyDataView {
 	private String yama_gandam_to;
 
 	@Transient
-	private List<Amrutham> amruthamList;
+	private String getRaahukaalamAsStringEn;
+	@Transient
+	private String getRaahukaalamAsStringTe;
+	@Transient
+	private String getYamagandamAsStringEn;
+	@Transient
+	private String getYamagandamAsStringTe;
 
 	@Transient
-	private List<Varjyam> varjyamList;
+	private List<String> amruthamListEn;
 
 	@Transient
-	private List<Durmuhurtham> durmuharthamList;
+	private List<String> varjyamListEn;
+
+	@Transient
+	private List<String> durmuhurthamListEn;
+
+	@Transient
+	private List<String> amruthamListTe;
+
+	@Transient
+	private List<String> varjyamListTe;
+
+	@Transient
+	private List<String> durmuhurthamListTe;
 
 	@Transient
 	private String error;
@@ -250,11 +269,11 @@ public class DailyDataView {
 		this.sunset = sunset;
 	}
 
-	public String getOccasion() {
-		return checkAndGet(occasion);
+	public List<String> getOccasion() {
+		return occasion == null ? Arrays.asList() : occasion;
 	}
 
-	public void setOccasion(String occasion) {
+	public void setOccasion(List<String> occasion) {
 		this.occasion = occasion;
 	}
 
@@ -411,30 +430,6 @@ public class DailyDataView {
 		this.nakshatram_to_te = nakshatram_to_te;
 	}
 
-	public List<Amrutham> getAmruthamList() {
-		return amruthamList;
-	}
-
-	public void setAmruthamList(List<Amrutham> amruthamList) {
-		this.amruthamList = amruthamList;
-	}
-
-	public List<Varjyam> getVarjyamList() {
-		return varjyamList;
-	}
-
-	public void setVarjyamList(List<Varjyam> varjyamList) {
-		this.varjyamList = varjyamList;
-	}
-
-	public List<Durmuhurtham> getDurmuharthamList() {
-		return durmuharthamList;
-	}
-
-	public void setDurmuharthamList(List<Durmuhurtham> durmuharthamList) {
-		this.durmuharthamList = durmuharthamList;
-	}
-
 	public String getRaahu_kaalam_from() {
 		return raahu_kaalam_from;
 	}
@@ -465,6 +460,122 @@ public class DailyDataView {
 
 	public void setYama_gandam_to(String yama_gandam_to) {
 		this.yama_gandam_to = yama_gandam_to;
+	}
+
+	public String getDay_desc_en() {
+		return day_desc_en;
+	}
+
+	public void setDay_desc_en(String day_desc_en) {
+		this.day_desc_en = day_desc_en;
+	}
+
+	public String getDay_desc_te() {
+		return day_desc_te;
+	}
+
+	public void setDay_desc_te(String day_desc_te) {
+		this.day_desc_te = day_desc_te;
+	}
+
+	public List<String> getAmruthamListEn() {
+		return amruthamListEn;
+	}
+
+	public void setAmruthamListEn(List<String> amruthamListEn) {
+		this.amruthamListEn = amruthamListEn;
+	}
+
+	public List<String> getVarjyamListEn() {
+		return varjyamListEn;
+	}
+
+	public void setVarjyamListEn(List<String> varjyamListEn) {
+		this.varjyamListEn = varjyamListEn;
+	}
+
+	public List<String> getAmruthamListTe() {
+		return amruthamListTe;
+	}
+
+	public void setAmruthamListTe(List<String> amruthamListTe) {
+		this.amruthamListTe = amruthamListTe;
+	}
+
+	public List<String> getVarjyamListTe() {
+		return varjyamListTe;
+	}
+
+	public void setVarjyamListTe(List<String> varjyamListTe) {
+		this.varjyamListTe = varjyamListTe;
+	}
+
+	public List<String> getDurmuhurthamListTe() {
+		return durmuhurthamListTe;
+	}
+
+	public void setDurmuhurthamListTe(List<String> durmuhurthamListTe) {
+		this.durmuhurthamListTe = durmuhurthamListTe;
+	}
+
+	public List<String> getDurmuhurthamListEn() {
+		return durmuhurthamListEn;
+	}
+
+	public void setDurmuhurthamListEn(List<String> durmuhurthamListEn) {
+		this.durmuhurthamListEn = durmuhurthamListEn;
+	}
+
+	public String getGetRaahukaalamAsStringEn() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("from " + DateTimeUtils.convertTimeToHHMM(raahu_kaalam_from) + " to "
+				+ DateTimeUtils.convertTimeToHHMM(raahu_kaalam_to));
+
+		return sb.toString();
+	}
+
+	public void setGetRaahukaalamAsStringEn(String getRaahukaalamAsStringEn) {
+		this.getRaahukaalamAsStringEn = getRaahukaalamAsStringEn;
+	}
+
+	public String getGetRaahukaalamAsStringTe() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(DateTimeUtils.convertTimeToHHMM(raahu_kaalam_from) + " నుండి "
+				+ DateTimeUtils.convertTimeToHHMM(raahu_kaalam_to) + " వరకు");
+
+		return sb.toString();
+	}
+
+	public void setGetRaahukaalamAsStringTe(String getRaahukaalamAsStringTe) {
+		this.getRaahukaalamAsStringTe = getRaahukaalamAsStringTe;
+	}
+
+	public String getGetYamagandamAsStringEn() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("from " + DateTimeUtils.convertTimeToHHMM(yama_gandam_from) + " to "
+				+ DateTimeUtils.convertTimeToHHMM(yama_gandam_to));
+
+		return sb.toString();
+	}
+
+	public void setGetYamagandamAsStringEn(String getYamagandamAsStringEn) {
+		this.getYamagandamAsStringEn = getYamagandamAsStringEn;
+	}
+
+	public String getGetYamagandamAsStringTe() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(DateTimeUtils.convertTimeToHHMM(yama_gandam_from) + " నుండి "
+				+ DateTimeUtils.convertTimeToHHMM(yama_gandam_to) + " వరకు");
+
+		return sb.toString();
+	}
+
+	public void setGetYamagandamAsStringTe(String getYamagandamAsStringTe) {
+		this.getYamagandamAsStringTe = getYamagandamAsStringTe;
 	}
 
 }

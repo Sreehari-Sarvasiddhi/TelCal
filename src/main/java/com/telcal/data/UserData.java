@@ -11,5 +11,6 @@ public class UserData {
 
 	String date;
 	String lang;
+	int desantharakalam;
 
 }

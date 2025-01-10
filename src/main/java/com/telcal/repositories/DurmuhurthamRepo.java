@@ -12,6 +12,6 @@ import com.telcal.entity.Durmuhurtham;
 @Repository
 public interface DurmuhurthamRepo extends JpaRepository<Durmuhurtham, Long> {
 	// Add custom queries if needed
-	@Query(value = "SELECT e FROM Durmuhurtham e WHERE date = :date order by id")
+	@Query(value = "SELECT e FROM Durmuhurtham e WHERE date = :date order by from_time")
 	List<Durmuhurtham> findByDate(LocalDate date);
 }

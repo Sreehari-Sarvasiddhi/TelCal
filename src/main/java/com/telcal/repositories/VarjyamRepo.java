@@ -12,6 +12,6 @@ import com.telcal.entity.Varjyam;
 @Repository
 public interface VarjyamRepo extends JpaRepository<Varjyam, Long> {
 	// Add custom queries if needed
-	@Query(value = "SELECT e FROM Varjyam e WHERE date = :date order by id")
+	@Query(value = "SELECT e FROM Varjyam e WHERE date = :date order by from_time")
 	List<Varjyam> findByDate(LocalDate date);
 }

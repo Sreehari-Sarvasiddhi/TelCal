@@ -12,6 +12,6 @@ import com.telcal.entity.Amrutham;
 @Repository
 public interface AmruthamRepo extends JpaRepository<Amrutham, Long> {
 	// Add custom queries if needed
-	@Query(value = "SELECT e FROM Amrutham e WHERE date = :date order by id")
+	@Query(value = "SELECT e FROM Amrutham e WHERE date = :date order by from_time")
 	List<Amrutham> findByDate(LocalDate date);
 }

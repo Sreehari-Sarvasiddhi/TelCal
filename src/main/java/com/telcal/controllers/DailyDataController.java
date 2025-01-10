@@ -1,7 +1,5 @@
 package com.telcal.controllers;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,17 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.telcal.data.DailyDataResponseType;
 import com.telcal.data.UserData;
 import com.telcal.entity.Amrutham;
-import com.telcal.entity.DailyData;
 import com.telcal.entity.DailyDataView;
 import com.telcal.entity.Durmuhurtham;
 import com.telcal.entity.Varjyam;
@@ -31,6 +26,7 @@ import com.telcal.repositories.VarjyamRepo;
 import com.telcal.transformers.DailyDataTransformer;
 
 import jakarta.servlet.http.HttpServletRequest;
+import util.DateTimeUtils;
 
 @RestController
 @CrossOrigin
@@ -40,7 +36,7 @@ public class DailyDataController {
 	DailyDataRepo repo;
 
 	@Autowired
-	DailyDataViewRepo dailyDaataViewRepo;
+	DailyDataViewRepo dailyDataViewRepo;
 
 	@Autowired
 	AmruthamRepo amruthamRepo;
@@ -54,88 +50,6 @@ public class DailyDataController {
 	@Autowired
 	DailyDataTransformer transformer;
 
-	@GetMapping("/allDailyData")
-	public ResponseEntity<List<DailyDataResponseType>> getAllDailyDataList(@RequestHeader("x-lang") String lang)
-			throws Exception {
-
-		if (!(lang.equalsIgnoreCase("EN") || lang.equalsIgnoreCase("TE"))) {
-			throw new Exception("x-lang should be amongst EN / TE");
-		}
-
-		System.out.println("entered the dailydata endpoint");
-		List<DailyDataResponseType> response = new ArrayList<>();
-		List<DailyData> entryList;
-
-		System.out.println("fetching from POSTGRES");
-		entryList = repo.findAll();
-
-		entryList.forEach(k -> response.add(transformer.transformResponse(k, lang)));
-
-		return ResponseEntity.ok().body(response);
-
-	}
-
-	@PostMapping("/getDataByDate")
-	@CrossOrigin(originPatterns = { "*://*/*" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-			RequestMethod.DELETE }, allowedHeaders = { "Content-Type", "Accept", "X-Requested-With",
-					"Authorization" }, exposedHeaders = { "Location", "Content-Disposition", "Content-Type", "Accept",
-							"Authorization" }, maxAge = 3600, allowCredentials = "true")
-
-	public ResponseEntity<List<DailyDataResponseType>> getdataByDate(@RequestHeader("x-lang") String lang,
-			@RequestBody UserData user, HttpServletRequest httpRequest) throws Exception {
-		String date = user.getDate();
-		System.out.println("Get Data By Date : " + date);
-
-		String origin = "*";
-
-		if (!httpRequest.getHeader("Access-Control-Allow-Origin").isEmpty())
-			origin = httpRequest.getHeader("Access-Control-Allow-Origin").toString();
-
-		System.out.println("origin being passed as  " + origin);
-
-		List<DailyData> repoResult = repo.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
-
-		List<DailyDataResponseType> response = new ArrayList<>();
-
-		repoResult.forEach(k -> response.add(transformer.transformResponse(k, lang)));
-
-		if (response.size() == 0) {
-			List<DailyDataResponseType> respList = new ArrayList<>();
-			DailyDataResponseType resp = new DailyDataResponseType();
-			resp.setDate(convertDateStringFormat(date));
-			resp.setError("No Data Found");
-			respList.add(resp);
-			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(respList);
-		} else {
-			response.forEach(k -> k.setError(""));
-			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(response);
-		}
-	}
-
-	private LocalDate convertStringtoLocalDate(String dateString) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-		LocalDate localDate = LocalDate.parse(dateString, formatter);
-		return localDate;
-	}
-
-	private String convertDateStringFormat(String dateString) {
-
-		DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-
-		LocalDate date = LocalDate.parse(dateString, inputFormatter);
-		String formattedDate = date.format(outputFormatter);
-
-		System.out.println(formattedDate);
-
-		return formattedDate;
-	}
-
-	private List<DailyDataResponseType> getAllObjectsList(String lang) throws Exception {
-		return getAllDailyDataList(lang).getBody();
-	}
-
 	@PostMapping("/getTransoformedDataByDate")
 	@CrossOrigin(originPatterns = { "*://*/*" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
 			RequestMethod.DELETE }, allowedHeaders = { "Content-Type", "Accept", "X-Requested-With",
@@ -145,7 +59,10 @@ public class DailyDataController {
 	public ResponseEntity<List<DailyDataView>> getTransformedDataByDate(@RequestHeader("x-lang") String lang,
 			@RequestBody UserData user, HttpServletRequest httpRequest) throws Exception {
 		String date = user.getDate();
+		int desantharakalam = user.getDesantharakalam();
+
 		System.out.println("Get Data By Date : " + date);
+		System.out.println("Get Data By Desantharakalam : " + desantharakalam);
 
 		String origin = "*";
 
@@ -154,33 +71,50 @@ public class DailyDataController {
 
 		System.out.println("origin being passed as  " + origin);
 
-		List<DailyDataView> repoResult = dailyDaataViewRepo
-				.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
+		List<DailyDataView> repoResult = dailyDataViewRepo
+				.findByDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
 
-		List<Amrutham> amruthamData = amruthamRepo.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
+		List<Amrutham> amruthamData = amruthamRepo
+				.findByDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
 
-		List<Varjyam> varjyamData = varjyamRepo.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
+		List<Varjyam> varjyamData = varjyamRepo
+				.findByDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
 
 		List<Durmuhurtham> durmuhurthamData = durmuhurthamRepo
-				.findByDate(convertStringtoLocalDate(convertDateStringFormat(date)));
+				.findByDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
 
 		if (repoResult.size() == 0) {
 			List<DailyDataView> respList = new ArrayList<>();
 			DailyDataView resp = new DailyDataView();
-			resp.setDate(convertStringtoLocalDate(convertDateStringFormat(date)));
+			resp.setDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
 			resp.setError("No Data Found");
 			respList.add(resp);
 			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(respList);
 		} else {
+
+//			adjustResultsToDesantharaKaalam(repoResult);
+
 			repoResult.forEach(k -> {
 				k.setError("");
-				k.setAmruthamList(amruthamData);
-				k.setVarjyamList(varjyamData);
-				k.setDurmuharthamList(durmuhurthamData);
+
+				k.setAmruthamListEn(amruthamData.stream().map(item -> item.getTimingsAsStringEn()).toList());
+				k.setAmruthamListTe(amruthamData.stream().map(item -> item.getTimingsAsStringTe()).toList());
+
+				k.setVarjyamListEn(varjyamData.stream().map(item -> item.getTimingsAsStringEn()).toList());
+				k.setVarjyamListTe(varjyamData.stream().map(item -> item.getTimingsAsStringTe()).toList());
+
+				k.setDurmuhurthamListEn(durmuhurthamData.stream().map(item -> item.getTimingsAsStringEn()).toList());
+				k.setDurmuhurthamListTe(durmuhurthamData.stream().map(item -> item.getTimingsAsStringTe()).toList());
+
 			});
 			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(repoResult);
 		}
 	}
+
+//	private void adjustResultsToDesantharaKaalam(List<DailyDataView> repoResult) {
+//		// TODO Auto-generated method stub
+//		
+//	}
 
 	public HttpHeaders getCorHeaders(String origin) {
 		HttpHeaders headers = new HttpHeaders();

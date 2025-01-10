@@ -7,6 +7,8 @@ import com.telcal.transformers.LocalDateToStringConverter;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import util.DateTimeUtils;
 
 @Entity
 @Table(name = "amrutham")
@@ -18,6 +20,12 @@ public class Amrutham {
 	private String from_time;
 	private String to_time;
 	private boolean is_exist;
+
+	@Transient
+	private String timingsAsStringEn;
+
+	@Transient
+	private String timingsAsStringTe;
 
 	public Long getId() {
 		return id;
@@ -57,6 +65,25 @@ public class Amrutham {
 
 	public void setIs_exist(boolean is_exist) {
 		this.is_exist = is_exist;
+	}
+
+	public String getTimingsAsStringEn() {
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("from " + DateTimeUtils.convertTimeToHHMM(from_time) + " to "
+				+ DateTimeUtils.convertTimeToHHMM(to_time));
+
+		return sb.toString();
+	}
+
+	public String getTimingsAsStringTe() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(DateTimeUtils.convertTimeToHHMM(from_time) + " నుండి " + DateTimeUtils.convertTimeToHHMM(to_time)
+				+ " వరకు");
+
+		return sb.toString();
 	}
 
 }
