@@ -2,6 +2,7 @@ package com.telcal.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -97,14 +98,44 @@ public class DailyDataController {
 			repoResult.forEach(k -> {
 				k.setError("");
 
-				k.setAmruthamListEn(amruthamData.stream().map(item -> item.getTimingsAsStringEn()).toList());
-				k.setAmruthamListTe(amruthamData.stream().map(item -> item.getTimingsAsStringTe()).toList());
+				k.setAmruthamListEn(amruthamData.stream().map(item -> item.getTimingsAsStringEn())
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("Not Applicable");
+							return list;
+						})));
+				k.setAmruthamListTe(amruthamData.stream().map(item -> item.getTimingsAsStringTe())
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("లేదు");
+							return list;
+						})));
 
-				k.setVarjyamListEn(varjyamData.stream().map(item -> item.getTimingsAsStringEn()).toList());
-				k.setVarjyamListTe(varjyamData.stream().map(item -> item.getTimingsAsStringTe()).toList());
+				k.setVarjyamListEn(varjyamData.stream().map(item -> item.getTimingsAsStringEn())
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("Not Applicable");
+							return list;
+						})));
+				k.setVarjyamListTe(varjyamData.stream().map(item -> item.getTimingsAsStringTe())
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("లేదు");
+							return list;
+						})));
 
-				k.setDurmuhurthamListEn(durmuhurthamData.stream().map(item -> item.getTimingsAsStringEn()).toList());
-				k.setDurmuhurthamListTe(durmuhurthamData.stream().map(item -> item.getTimingsAsStringTe()).toList());
+				k.setDurmuhurthamListEn(durmuhurthamData.stream().map(item -> item.getTimingsAsStringEn())
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("Not Applicable");
+							return list;
+						})));
+				k.setDurmuhurthamListTe(durmuhurthamData.stream().map(item -> item.getTimingsAsStringTe())
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("లేదు");
+							return list;
+						})));
 
 			});
 			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(repoResult);
