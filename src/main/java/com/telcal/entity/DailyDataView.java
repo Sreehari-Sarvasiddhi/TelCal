@@ -2,7 +2,6 @@ package com.telcal.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 import com.telcal.transformers.DateStringConverter;
@@ -65,7 +64,10 @@ public class DailyDataView {
 	private String sunset;
 
 	@Transient
-	private List<String> occasion;
+	private List<String> occasionEn;
+
+	@Transient
+	private List<String> occasionTe;
 
 	private String samvathsaram_peru;
 	private String ayanam_peru;
@@ -269,12 +271,20 @@ public class DailyDataView {
 		this.sunset = sunset;
 	}
 
-	public List<String> getOccasion() {
-		return occasion == null ? Arrays.asList() : occasion;
+	public List<String> getOccasionEn() {
+		return occasionEn;
 	}
 
-	public void setOccasion(List<String> occasion) {
-		this.occasion = occasion;
+	public void setOccasionEn(List<String> occasionEn) {
+		this.occasionEn = occasionEn;
+	}
+
+	public List<String> getOccasionTe() {
+		return occasionTe;
+	}
+
+	public void setOccasionTe(List<String> occasionTe) {
+		this.occasionTe = occasionTe;
 	}
 
 	public String getError() {

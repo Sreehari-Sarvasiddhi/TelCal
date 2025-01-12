@@ -1,5 +1,8 @@
 package com.telcal.controllers;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,11 +21,13 @@ import com.telcal.data.UserData;
 import com.telcal.entity.Amrutham;
 import com.telcal.entity.DailyDataView;
 import com.telcal.entity.Durmuhurtham;
+import com.telcal.entity.Ocassions;
 import com.telcal.entity.Varjyam;
 import com.telcal.repositories.AmruthamRepo;
 import com.telcal.repositories.DailyDataRepo;
 import com.telcal.repositories.DailyDataViewRepo;
 import com.telcal.repositories.DurmuhurthamRepo;
+import com.telcal.repositories.OcassionsRepo;
 import com.telcal.repositories.VarjyamRepo;
 import com.telcal.transformers.DailyDataTransformer;
 
@@ -44,6 +49,9 @@ public class DailyDataController {
 
 	@Autowired
 	VarjyamRepo varjyamRepo;
+
+	@Autowired
+	OcassionsRepo ocassionsRepo;
 
 	@Autowired
 	DurmuhurthamRepo durmuhurthamRepo;
@@ -84,6 +92,9 @@ public class DailyDataController {
 		List<Durmuhurtham> durmuhurthamData = durmuhurthamRepo
 				.findByDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
 
+		List<Ocassions> ocassionsData = ocassionsRepo
+				.findByDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
+
 		if (repoResult.size() == 0) {
 			List<DailyDataView> respList = new ArrayList<>();
 			DailyDataView resp = new DailyDataView();
@@ -98,54 +109,94 @@ public class DailyDataController {
 			repoResult.forEach(k -> {
 				k.setError("");
 
-				k.setAmruthamListEn(amruthamData.stream().map(item -> item.getTimingsAsStringEn())
+				k.setAmruthamListEn(
+						amruthamData.stream().map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam))
+								.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+									if (list.isEmpty())
+										list.add("Not Applicable");
+									return list;
+								})));
+				k.setAmruthamListTe(
+						amruthamData.stream().map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam))
+								.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+									if (list.isEmpty())
+										list.add("లేదు");
+									return list;
+								})));
+
+				k.setVarjyamListEn(
+						varjyamData.stream().map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam))
+								.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+									if (list.isEmpty())
+										list.add("Not Applicable");
+									return list;
+								})));
+				k.setVarjyamListTe(
+						varjyamData.stream().map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam))
+								.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+									if (list.isEmpty())
+										list.add("లేదు");
+									return list;
+								})));
+
+				k.setDurmuhurthamListEn(durmuhurthamData.stream()
+						.map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
 							if (list.isEmpty())
 								list.add("Not Applicable");
 							return list;
 						})));
-				k.setAmruthamListTe(amruthamData.stream().map(item -> item.getTimingsAsStringTe())
+				k.setDurmuhurthamListTe(durmuhurthamData.stream()
+						.map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
 							if (list.isEmpty())
 								list.add("లేదు");
 							return list;
 						})));
 
-				k.setVarjyamListEn(varjyamData.stream().map(item -> item.getTimingsAsStringEn())
-						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
-								list.add("Not Applicable");
-							return list;
-						})));
-				k.setVarjyamListTe(varjyamData.stream().map(item -> item.getTimingsAsStringTe())
-						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
-								list.add("లేదు");
-							return list;
-						})));
-
-				k.setDurmuhurthamListEn(durmuhurthamData.stream().map(item -> item.getTimingsAsStringEn())
-						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
-								list.add("Not Applicable");
-							return list;
-						})));
-				k.setDurmuhurthamListTe(durmuhurthamData.stream().map(item -> item.getTimingsAsStringTe())
-						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
-								list.add("లేదు");
-							return list;
-						})));
+				k.setOccasionEn(ocassionsData.stream().map(item -> item.getOcassion_en()).toList());
+				k.setOccasionTe(ocassionsData.stream().map(item -> item.getOcassion_te()).toList());
 
 			});
+
+			repoResult = adjustResultstoDesantharakalam(repoResult, desantharakalam);
+
 			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(repoResult);
 		}
 	}
 
-//	private void adjustResultsToDesantharaKaalam(List<DailyDataView> repoResult) {
-//		// TODO Auto-generated method stub
-//		
-//	}
+	private List<DailyDataView> adjustResultstoDesantharakalam(List<DailyDataView> repoResult, int desantharakalam) {
+		for (DailyDataView data : repoResult) {
+
+			if (!(data.getThidhi_from().isBlank() && data.getThidhi_from().isEmpty()))
+				data.setThidhi_from(
+						LocalDateTime.parse(data.getThidhi_from(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+								.plusMinutes(desantharakalam));
+
+			if (!(data.getThidhi_to().isBlank() && data.getThidhi_to().isEmpty()))
+				data.setThidhi_to(
+						LocalDateTime.parse(data.getThidhi_to(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+								.plusMinutes(desantharakalam));
+
+			if (!(data.getNakshatram_from().isBlank() && data.getNakshatram_from().isEmpty()))
+				data.setNakshatram_from(LocalDateTime
+						.parse(data.getNakshatram_from(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+						.plusMinutes(desantharakalam));
+
+			if (!(data.getNakshatram_to().isBlank() && data.getNakshatram_to().isEmpty()))
+				data.setNakshatram_to(
+						LocalDateTime.parse(data.getNakshatram_to(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+								.plusMinutes(desantharakalam));
+
+			data.setSunrise(DateTimeUtils.convertTimeToHHMM(DateTimeUtils
+					.convertLocalTimeToString(LocalTime.parse(data.getSunrise()).plusMinutes(desantharakalam))));
+			data.setSunset(DateTimeUtils.convertTimeToHHMM(DateTimeUtils
+					.convertLocalTimeToString(LocalTime.parse(data.getSunset()).plusMinutes(desantharakalam))));
+
+		}
+
+		return repoResult;
+	}
 
 	public HttpHeaders getCorHeaders(String origin) {
 		HttpHeaders headers = new HttpHeaders();

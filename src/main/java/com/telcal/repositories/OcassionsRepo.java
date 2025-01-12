@@ -7,13 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.telcal.entity.DailyDataView;
+import com.telcal.entity.Ocassions;
 
 @Repository
-public interface DailyDataViewRepo extends JpaRepository<DailyDataView, Long> {
+public interface OcassionsRepo extends JpaRepository<Ocassions, Long> {
 	// Add custom queries if needed
-
-	@Query(value = "SELECT e FROM DailyDataView e WHERE date = :date order by id")
-	List<DailyDataView> findByDate(LocalDate date);
-	
+	@Query(value = "SELECT e FROM Ocassions e WHERE date = :date order by ocassion_en")
+	List<Ocassions> findByDate(LocalDate date);
 }

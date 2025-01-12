@@ -1,6 +1,7 @@
 package com.telcal.entity;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.telcal.transformers.LocalDateToStringConverter;
 
@@ -67,21 +68,34 @@ public class Durmuhurtham {
 		this.is_exist = is_exist;
 	}
 
-	public String getTimingsAsStringEn() {
+	public String getTimingsAsStringByDesantharakalamEn(int desantharakalam) {
+
+		String updatedFromTime = DateTimeUtils
+				.convertLocalTimeToString(LocalTime.parse(from_time).plusMinutes(desantharakalam));
+
+		String updatedToTime = DateTimeUtils
+				.convertLocalTimeToString(LocalTime.parse(to_time).plusMinutes(desantharakalam));
 
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("from " + DateTimeUtils.convertTimeToHHMM(from_time) + " to "
-				+ DateTimeUtils.convertTimeToHHMM(to_time));
+		sb.append("from " + DateTimeUtils.convertTimeToHHMM(updatedFromTime) + " to "
+				+ DateTimeUtils.convertTimeToHHMM(updatedToTime));
 
 		return sb.toString();
 	}
 
-	public String getTimingsAsStringTe() {
+	public String getTimingsAsStringByDesantharakalamTe(int desantharakalam) {
+
+		String updatedFromTime = DateTimeUtils
+				.convertLocalTimeToString(LocalTime.parse(from_time).plusMinutes(desantharakalam));
+
+		String updatedToTime = DateTimeUtils
+				.convertLocalTimeToString(LocalTime.parse(to_time).plusMinutes(desantharakalam));
+
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(DateTimeUtils.convertTimeToHHMM(from_time) + " నుండి " + DateTimeUtils.convertTimeToHHMM(to_time)
-				+ " వరకు");
+		sb.append(DateTimeUtils.convertTimeToHHMM(updatedFromTime) + " నుండి "
+				+ DateTimeUtils.convertTimeToHHMM(updatedToTime) + " వరకు");
 
 		return sb.toString();
 	}
