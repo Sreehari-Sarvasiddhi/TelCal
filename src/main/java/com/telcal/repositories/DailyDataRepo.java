@@ -19,4 +19,7 @@ public interface DailyDataRepo extends JpaRepository<DailyData, Long> {
 	@Query(value = "SELECT e FROM DailyData e WHERE date = :date")
 	List<DailyData> findByDate(LocalDate date);
 
+	@Query(value = "SELECT e FROM DailyData e WHERE date between :startDate AND :endDate")
+	List<DailyData> getDataByDateRange(LocalDate startDate, LocalDate endDate);
+
 }
