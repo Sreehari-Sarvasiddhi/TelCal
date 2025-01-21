@@ -27,12 +27,13 @@ import com.telcal.repositories.AmruthamRepo;
 import com.telcal.repositories.DailyDataRepo;
 import com.telcal.repositories.DailyDataViewRepo;
 import com.telcal.repositories.DurmuhurthamRepo;
+import com.telcal.repositories.MonthRepo;
 import com.telcal.repositories.OcassionsRepo;
 import com.telcal.repositories.VarjyamRepo;
-import com.telcal.transformers.DailyDataTransformer;
+import com.telcal.util.DailyDataOrdinalUtil;
+import com.telcal.util.DateTimeUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
-import util.DateTimeUtils;
 
 @RestController
 @CrossOrigin
@@ -57,7 +58,11 @@ public class DailyDataController {
 	DurmuhurthamRepo durmuhurthamRepo;
 
 	@Autowired
-	DailyDataTransformer transformer;
+	MonthRepo monthRepo;
+//	
+
+	@Autowired
+	DailyDataOrdinalUtil ordinalUtil;
 
 	@PostMapping("/getTransoformedDataByDate")
 	@CrossOrigin(originPatterns = { "*://*/*" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
@@ -104,50 +109,48 @@ public class DailyDataController {
 			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(respList);
 		} else {
 
-//			adjustResultsToDesantharaKaalam(repoResult);
-
 			repoResult.forEach(k -> {
 				k.setError("");
 
-				k.setAmruthamListEn(
-						amruthamData.stream().map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam))
-								.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-									if (list.isEmpty())
-										list.add("Not Applicable");
-									return list;
-								})));
-				k.setAmruthamListTe(
-						amruthamData.stream().map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam))
-								.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-									if (list.isEmpty())
-										list.add("లేదు");
-									return list;
-								})));
+				k.setAmruthamListEn(amruthamData.stream()
+						.map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam, ordinalUtil))
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("Not Applicable");
+							return list;
+						})));
+				k.setAmruthamListTe(amruthamData.stream()
+						.map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam, ordinalUtil))
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("లేదు");
+							return list;
+						})));
 
-				k.setVarjyamListEn(
-						varjyamData.stream().map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam))
-								.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-									if (list.isEmpty())
-										list.add("Not Applicable");
-									return list;
-								})));
-				k.setVarjyamListTe(
-						varjyamData.stream().map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam))
-								.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-									if (list.isEmpty())
-										list.add("లేదు");
-									return list;
-								})));
+				k.setVarjyamListEn(varjyamData.stream()
+						.map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam, ordinalUtil))
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("Not Applicable");
+							return list;
+						})));
+				k.setVarjyamListTe(varjyamData.stream()
+						.map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam, ordinalUtil))
+						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+							if (list.isEmpty())
+								list.add("లేదు");
+							return list;
+						})));
 
 				k.setDurmuhurthamListEn(durmuhurthamData.stream()
-						.map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam))
+						.map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam, ordinalUtil))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
 							if (list.isEmpty())
 								list.add("Not Applicable");
 							return list;
 						})));
 				k.setDurmuhurthamListTe(durmuhurthamData.stream()
-						.map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam))
+						.map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam, ordinalUtil))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
 							if (list.isEmpty())
 								list.add("లేదు");
@@ -160,6 +163,8 @@ public class DailyDataController {
 			});
 
 			repoResult = adjustResultstoDesantharakalam(repoResult, desantharakalam);
+
+			ordinalUtil.adjustOrdinalsForThidhiAndNakshatram(repoResult);
 
 			return ResponseEntity.ok().headers(getCorHeaders(origin)).body(repoResult);
 		}
@@ -192,6 +197,16 @@ public class DailyDataController {
 					.convertLocalTimeToString(LocalTime.parse(data.getSunrise()).plusMinutes(desantharakalam))));
 			data.setSunset(DateTimeUtils.convertTimeToHHMM(DateTimeUtils
 					.convertLocalTimeToString(LocalTime.parse(data.getSunset()).plusMinutes(desantharakalam))));
+
+			data.setRaahu_kaalam_from(DateTimeUtils.convertLocalTimeToString(
+					LocalTime.parse(data.getRaahu_kaalam_from()).plusMinutes(desantharakalam)));
+			data.setRaahu_kaalam_to(DateTimeUtils
+					.convertLocalTimeToString(LocalTime.parse(data.getRaahu_kaalam_to()).plusMinutes(desantharakalam)));
+
+			data.setYama_gandam_from(DateTimeUtils.convertLocalTimeToString(
+					LocalTime.parse(data.getYama_gandam_from()).plusMinutes(desantharakalam)));
+			data.setYama_gandam_to(DateTimeUtils
+					.convertLocalTimeToString(LocalTime.parse(data.getYama_gandam_to()).plusMinutes(desantharakalam)));
 
 		}
 

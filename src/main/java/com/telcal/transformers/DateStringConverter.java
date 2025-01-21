@@ -1,34 +1,23 @@
 package com.telcal.transformers;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
-import java.util.Locale;
+
+import org.springframework.stereotype.Component;
 
 import com.telcal.entity.DailyDataView;
+import com.telcal.repositories.MonthRepo;
+import com.telcal.util.DateTimeUtils;
 
+@Component
 public class DateStringConverter {
-	public static String convertToOrdinalString(DailyDataView dailyDataView, LocalDateTime dateTime, boolean isEn) {
+
+	public String convertToOrdinalString(MonthRepo monthRepo, DailyDataView dailyDataView, LocalDateTime dateTime,
+			boolean isEn) {
 		if (dateTime != null) {
 			// Custom formatter for time
-			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+//			DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
-			String dayWithSuffix = "";
-			// Get the day with ordinal suffix (e.g., 26th)
-			if (isEn)
-				dayWithSuffix = getDayWithSuffix(dateTime.getDayOfMonth());
-			else
-				dayWithSuffix = String.valueOf(dateTime.getDayOfMonth());
-
-			String month = "";
-			// Get abbreviated month name
-			if (isEn)
-				month = dateTime.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-			else
-				month = dailyDataView.getMonth_peru();
-
-			// Combine the parts
-			String formattedDate = String.format("%s %s, %s", month, dayWithSuffix, dateTime.format(timeFormatter));
+			String formattedDate = getOrdinalFormattedDateString(dateTime, isEn, monthRepo, true);
 
 			String prefix = "Upto";
 
@@ -43,7 +32,36 @@ public class DateStringConverter {
 		}
 	}
 
-	private static String getDayWithSuffix(int day) {
+	public String getOrdinalFormattedDateString(LocalDateTime dateTime, boolean isEn, MonthRepo monthRepo,
+			boolean isDateIncl) {
+		String dayWithSuffix = "";
+		// Get the day with ordinal suffix (e.g., 26th)
+		if (isEn)
+			dayWithSuffix = getDayWithSuffix(dateTime.getDayOfMonth());
+		else
+			dayWithSuffix = String.valueOf(dateTime.getDayOfMonth());
+
+		String month = "";
+		// Get abbreviated month name
+		if (isEn)
+			month = dateTime.getMonth().toString();
+		else
+			month = monthRepo.findById(Long.valueOf(dateTime.getMonthValue())).get().getPeru(); // dailyDataView.getMonth_peru();
+
+		// Combine the parts
+		String formattedDate = "";
+
+		if (isDateIncl) {
+			formattedDate = String.format("%s %s, %s", month, dayWithSuffix,
+					DateTimeUtils.convertLocalDateTimeToLocalTimeString(dateTime));
+		} else {
+			formattedDate = DateTimeUtils.convertLocalDateTimeToLocalTimeString(dateTime);
+		}
+
+		return formattedDate;
+	}
+
+	private String getDayWithSuffix(int day) {
 		if (day >= 11 && day <= 13)
 			return day + "th";
 		switch (day % 10) {

@@ -23,9 +23,9 @@ import com.telcal.data.MoonDataRequest;
 import com.telcal.entity.DailyData;
 import com.telcal.repositories.DailyDataRepo;
 import com.telcal.transformers.LocalDateToStringConverter;
+import com.telcal.util.DateTimeUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
-import util.DateTimeUtils;
 
 @RestController
 public class MoonDataController {

@@ -1,4 +1,4 @@
-package util;
+package com.telcal.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +22,15 @@ public class DateTimeUtils {
 
 		// Format it to hh:mm:ss
 		String formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+		return formattedTime;
+	}
+
+	public static String convertLocalDateTimeToLocalTimeString(LocalDateTime time) {
+		// Parse the time using LocalTime
+
+		// Format it to hh:mm:ss
+		String formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm"));
 
 		return formattedTime;
 	}

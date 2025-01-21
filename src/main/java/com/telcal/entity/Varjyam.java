@@ -1,15 +1,16 @@
 package com.telcal.entity;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.telcal.transformers.LocalDateToStringConverter;
+import com.telcal.util.DailyDataOrdinalUtil;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import util.DateTimeUtils;
 
 @Entity
 @Table(name = "varjyam")
@@ -68,35 +69,24 @@ public class Varjyam {
 		this.is_exist = is_exist;
 	}
 
-	public String getTimingsAsStringByDesantharakalamEn(int desantharakalam) {
+	public String getTimingsAsStringByDesantharakalamEn(int desantharakalam, DailyDataOrdinalUtil ordinalUtil) {
 
-		String updatedFromTime = DateTimeUtils
-				.convertLocalTimeToString(LocalTime.parse(from_time).plusMinutes(desantharakalam));
-
-		String updatedToTime = DateTimeUtils
-				.convertLocalTimeToString(LocalTime.parse(to_time).plusMinutes(desantharakalam));
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("from " + DateTimeUtils.convertTimeToHHMM(updatedFromTime) + " to "
-				+ DateTimeUtils.convertTimeToHHMM(updatedToTime));
-
-		return sb.toString();
+		return ordinalUtil.adjustOrdinalsForAmrutham(
+				LocalDateTime.parse(from_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+						.plusMinutes(desantharakalam),
+				LocalDateTime.parse(to_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+						.plusMinutes(desantharakalam),
+				true);
 	}
 
-	public String getTimingsAsStringByDesantharakalamTe(int desantharakalam) {
+	public String getTimingsAsStringByDesantharakalamTe(int desantharakalam, DailyDataOrdinalUtil ordinalUtil) {
 
-		String updatedFromTime = DateTimeUtils
-				.convertLocalTimeToString(LocalTime.parse(from_time).plusMinutes(desantharakalam));
+		return ordinalUtil.adjustOrdinalsForAmrutham(
+				LocalDateTime.parse(from_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+						.plusMinutes(desantharakalam),
+				LocalDateTime.parse(to_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+						.plusMinutes(desantharakalam),
+				false);
 
-		String updatedToTime = DateTimeUtils
-				.convertLocalTimeToString(LocalTime.parse(to_time).plusMinutes(desantharakalam));
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(DateTimeUtils.convertTimeToHHMM(updatedFromTime) + " నుండి "
-				+ DateTimeUtils.convertTimeToHHMM(updatedToTime) + " వరకు");
-
-		return sb.toString();
 	}
 }
