@@ -72,23 +72,27 @@ public class Durmuhurtham {
 	}
 
 	public String getTimingsAsStringByDesantharakalamEn(int desantharakalam, DailyDataOrdinalUtil ordinalUtil) {
-
-		return WordUtils.capitalizeFully(ordinalUtil.adjustOrdinalsForAmrutham(
-				LocalDateTime.parse(from_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-						.plusMinutes(desantharakalam),
-				LocalDateTime.parse(to_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-						.plusMinutes(desantharakalam),
-				true));
+		if (is_exist)
+			return WordUtils.capitalizeFully(ordinalUtil.adjustOrdinalsForAmrutham(
+					LocalDateTime.parse(from_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+							.plusMinutes(desantharakalam),
+					LocalDateTime.parse(to_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+							.plusMinutes(desantharakalam),
+					true));
+		else
+			return null;
 	}
 
 	public String getTimingsAsStringByDesantharakalamTe(int desantharakalam, DailyDataOrdinalUtil ordinalUtil) {
-
-		return WordUtils.capitalizeFully(ordinalUtil.adjustOrdinalsForAmrutham(
-				LocalDateTime.parse(from_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-						.plusMinutes(desantharakalam),
-				LocalDateTime.parse(to_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
-						.plusMinutes(desantharakalam),
-				false));
+		if (is_exist)
+			return WordUtils.capitalizeFully(ordinalUtil.adjustOrdinalsForAmrutham(
+					LocalDateTime.parse(from_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+							.plusMinutes(desantharakalam),
+					LocalDateTime.parse(to_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+							.plusMinutes(desantharakalam),
+					false));
+		else
+			return null;
 	}
 
 }
