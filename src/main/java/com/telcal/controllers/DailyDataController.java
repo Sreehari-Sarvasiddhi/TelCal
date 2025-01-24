@@ -115,45 +115,57 @@ public class DailyDataController {
 				k.setAmruthamListEn(amruthamData.stream()
 						.map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam, ordinalUtil))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
+							if (list.isEmpty() || list.contains(null)) {
+								list.clear();
 								list.add("Not Applicable");
+							}
 							return list;
 						})));
 				k.setAmruthamListTe(amruthamData.stream()
 						.map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam, ordinalUtil))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
+							if (list.isEmpty() || list.contains(null)) {
+								list.clear();
 								list.add("లేదు");
+							}
 							return list;
 						})));
 
 				k.setVarjyamListEn(varjyamData.stream()
 						.map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam, ordinalUtil))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
+							if (list.isEmpty() || list.contains(null)) {
+								list.clear();
 								list.add("Not Applicable");
+							}
 							return list;
 						})));
 				k.setVarjyamListTe(varjyamData.stream()
 						.map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam, ordinalUtil))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
+							if (list.isEmpty() || list.contains(null)) {
+								list.clear();
 								list.add("లేదు");
+							}
 							return list;
 						})));
 
 				k.setDurmuhurthamListEn(durmuhurthamData.stream()
 						.map(item -> item.getTimingsAsStringByDesantharakalamEn(desantharakalam, ordinalUtil))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
+							if (list.isEmpty() || list.contains(null)) {
+								list.clear();
 								list.add("Not Applicable");
+							}
 							return list;
 						})));
 				k.setDurmuhurthamListTe(durmuhurthamData.stream()
 						.map(item -> item.getTimingsAsStringByDesantharakalamTe(desantharakalam, ordinalUtil))
 						.collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
-							if (list.isEmpty())
+							if (list.isEmpty() || list.contains(null)) {
+								list.clear();
 								list.add("లేదు");
+							}
 							return list;
 						})));
 

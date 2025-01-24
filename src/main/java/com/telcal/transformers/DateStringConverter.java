@@ -2,9 +2,11 @@ package com.telcal.transformers;
 
 import java.time.LocalDateTime;
 
+import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Component;
 
 import com.telcal.entity.DailyDataView;
+import com.telcal.entity.Month;
 import com.telcal.repositories.MonthRepo;
 import com.telcal.util.DateTimeUtils;
 
@@ -24,9 +26,9 @@ public class DateStringConverter {
 			String suffix = "వరకు";
 
 			if (isEn)
-				return prefix + " " + formattedDate;
+				return WordUtils.capitalizeFully(prefix + " " + formattedDate);
 			else
-				return formattedDate + " " + suffix;
+				return WordUtils.capitalizeFully(formattedDate + " " + suffix);
 		} else {
 			return "";
 		}
@@ -41,12 +43,14 @@ public class DateStringConverter {
 		else
 			dayWithSuffix = String.valueOf(dateTime.getDayOfMonth());
 
+		Month monthEntity = monthRepo.findById(Long.valueOf(dateTime.getMonthValue())).get();
+
 		String month = "";
 		// Get abbreviated month name
 		if (isEn)
-			month = dateTime.getMonth().toString();
+			month = monthEntity.getName();
 		else
-			month = monthRepo.findById(Long.valueOf(dateTime.getMonthValue())).get().getPeru(); // dailyDataView.getMonth_peru();
+			month = monthEntity.getPeru(); // dailyDataView.getMonth_peru();
 
 		// Combine the parts
 		String formattedDate = "";

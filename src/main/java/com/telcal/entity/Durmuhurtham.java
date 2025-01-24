@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.apache.commons.text.WordUtils;
+
 import com.telcal.transformers.LocalDateToStringConverter;
 import com.telcal.util.DailyDataOrdinalUtil;
 
@@ -71,22 +73,22 @@ public class Durmuhurtham {
 
 	public String getTimingsAsStringByDesantharakalamEn(int desantharakalam, DailyDataOrdinalUtil ordinalUtil) {
 
-		return ordinalUtil.adjustOrdinalsForAmrutham(
+		return WordUtils.capitalizeFully(ordinalUtil.adjustOrdinalsForAmrutham(
 				LocalDateTime.parse(from_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 						.plusMinutes(desantharakalam),
 				LocalDateTime.parse(to_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 						.plusMinutes(desantharakalam),
-				true);
+				true));
 	}
 
 	public String getTimingsAsStringByDesantharakalamTe(int desantharakalam, DailyDataOrdinalUtil ordinalUtil) {
 
-		return ordinalUtil.adjustOrdinalsForAmrutham(
+		return WordUtils.capitalizeFully(ordinalUtil.adjustOrdinalsForAmrutham(
 				LocalDateTime.parse(from_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 						.plusMinutes(desantharakalam),
 				LocalDateTime.parse(to_time, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
 						.plusMinutes(desantharakalam),
-				false);
+				false));
 	}
 
 }

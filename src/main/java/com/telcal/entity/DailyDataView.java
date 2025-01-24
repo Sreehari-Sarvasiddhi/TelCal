@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.commons.text.WordUtils;
+
 import com.telcal.transformers.LocalDateToStringConverter;
 import com.telcal.util.DateTimeUtils;
 
@@ -366,78 +368,12 @@ public class DailyDataView {
 		this.nakshatram_peru = nakshatram_peru;
 	}
 
-//	public String getThidhi_from_en() {
-//		return dateStringConverter.convertToOrdinalString(this, thidhi_from, true);
-//	}
-//
-//	public void setThidhi_from_en(String thidhi_from_en) {
-//		this.thidhi_from_en = thidhi_from_en;
-//	}
-//
-//	public String getThidhi_to_en() {
-//		return dateStringConverter.convertToOrdinalString(this, thidhi_to, true);
-//	}
-//
-//	public void setThidhi_to_en(String thidhi_to_en) {
-//		this.thidhi_to_en = thidhi_to_en;
-//	}
-//
-//	public String getThidhi_from_te() {
-//		return dateStringConverter.convertToOrdinalString(this, thidhi_from, false);
-//	}
-//
-//	public void setThidhi_from_te(String thidhi_from_te) {
-//		this.thidhi_from_te = thidhi_from_te;
-//	}
-//
-//	public String getThidhi_to_te() {
-//		return dateStringConverter.convertToOrdinalString(this, thidhi_to, false);
-//	}
-//
-//	public void setThidhi_to_te(String thidhi_to_te) {
-//		this.thidhi_to_te = thidhi_to_te;
-//	}
-
-	// -----
-
 	private String checkAndGet(String input) {
 		if (input == null) {
 			return "";
 		}
-		return input;
+		return WordUtils.capitalizeFully(input);
 	}
-
-//	public String getNakshatram_from_en() {
-//		return nakshatram_from_en;
-//	}
-//
-//	public void setNakshatram_from_en(String nakshatram_from_en) {
-//		this.nakshatram_from_en = nakshatram_from_en;
-//	}
-//
-//	public String getNakshatram_to_en() {
-//		return dateStringConverter.convertToOrdinalString(this, nakshatram_to, true);
-//	}
-//
-//	public void setNakshatram_to_en(String nakshatram_to_en) {
-//		this.nakshatram_to_en = nakshatram_to_en;
-//	}
-//
-//	public String getNakshatram_from_te() {
-//		return dateStringConverter.convertToOrdinalString(this, nakshatram_from, false);
-//	}
-//
-//	public void setNakshatram_from_te(String nakshatram_from_te) {
-//		this.nakshatram_from_te = nakshatram_from_te;
-//	}
-//
-//	public String getNakshatram_to_te() {
-//		return dateStringConverter.convertToOrdinalString(this, nakshatram_to, false);
-//	}
-//
-//	public void setNakshatram_to_te(String nakshatram_to_te) {
-//		this.nakshatram_to_te = nakshatram_to_te;
-//	}
 
 	public String getRaahu_kaalam_from() {
 		return raahu_kaalam_from;
@@ -536,7 +472,7 @@ public class DailyDataView {
 	}
 
 	public String getDay_desc_en() {
-		return day_desc_en;
+		return WordUtils.capitalizeFully(day_desc_en);
 	}
 
 	public void setDay_desc_en(String day_desc_en) {
@@ -544,7 +480,7 @@ public class DailyDataView {
 	}
 
 	public String getDay_desc_te() {
-		return day_desc_te;
+		return WordUtils.capitalizeFully(day_desc_te);
 	}
 
 	public void setDay_desc_te(String day_desc_te) {
