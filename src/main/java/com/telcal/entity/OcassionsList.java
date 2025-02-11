@@ -2,6 +2,10 @@ package com.telcal.entity;
 
 import java.time.LocalDate;
 
+import org.apache.commons.text.WordUtils;
+
+import com.telcal.transformers.LocalDateToStringConverter;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -20,6 +24,8 @@ public class OcassionsList {
 	private int date;
 	private int month_number;
 	private int year_number;
+	private String day_desc_te;
+	private String day_desc_en;
 
 	public Long getId() {
 		return id;
@@ -29,8 +35,16 @@ public class OcassionsList {
 		this.id = id;
 	}
 
-	public LocalDate getOcassion_date() {
-		return ocassion_date;
+	public String getOcassion_date() {
+		return checkAndGet(LocalDateToStringConverter.convertLocalDatetoString(ocassion_date));
+//		return ocassion_date;
+	}
+
+	private String checkAndGet(String input) {
+		if (input == null) {
+			return "";
+		}
+		return WordUtils.capitalizeFully(input);
 	}
 
 	public void setOcassion_date(LocalDate ocassion_date) {
@@ -91,6 +105,22 @@ public class OcassionsList {
 
 	public void setYear_number(int year_number) {
 		this.year_number = year_number;
+	}
+
+	public String getDay_desc_te() {
+		return day_desc_te;
+	}
+
+	public void setDay_desc_te(String day_desc_te) {
+		this.day_desc_te = day_desc_te;
+	}
+
+	public String getDay_desc_en() {
+		return day_desc_en;
+	}
+
+	public void setDay_desc_en(String day_desc_en) {
+		this.day_desc_en = day_desc_en;
 	}
 
 }
