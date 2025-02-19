@@ -26,6 +26,7 @@ public class OcassionsList {
 	private int year_number;
 	private String day_desc_te;
 	private String day_desc_en;
+	private int samvathsaram_id;
 
 	public Long getId() {
 		return id;
@@ -36,7 +37,8 @@ public class OcassionsList {
 	}
 
 	public String getOcassion_date() {
-		return checkAndGet(LocalDateToStringConverter.convertLocalDatetoString(ocassion_date));
+		return WordUtils
+				.capitalizeFully(checkAndGet(LocalDateToStringConverter.convertLocalDatetoString(ocassion_date)));
 //		return ocassion_date;
 	}
 
@@ -52,7 +54,7 @@ public class OcassionsList {
 	}
 
 	public String getOcassion_name() {
-		return ocassion_name;
+		return WordUtils.capitalizeFully(ocassion_name);
 	}
 
 	public void setOcassion_name(String ocassion_name) {
@@ -60,7 +62,7 @@ public class OcassionsList {
 	}
 
 	public String getOcassion_peru() {
-		return ocassion_peru;
+		return WordUtils.capitalizeFully(ocassion_peru);
 	}
 
 	public void setOcassion_peru(String ocassion_peru) {
@@ -68,7 +70,7 @@ public class OcassionsList {
 	}
 
 	public String getMonth_name() {
-		return month_name;
+		return WordUtils.capitalizeFully(month_name);
 	}
 
 	public void setMonth_name(String month_name) {
@@ -76,7 +78,7 @@ public class OcassionsList {
 	}
 
 	public String getMonth_peru() {
-		return month_peru;
+		return WordUtils.capitalizeFully(month_peru);
 	}
 
 	public void setMonth_peru(String month_peru) {
@@ -108,7 +110,7 @@ public class OcassionsList {
 	}
 
 	public String getDay_desc_te() {
-		return day_desc_te;
+		return WordUtils.capitalizeFully(day_desc_te);
 	}
 
 	public void setDay_desc_te(String day_desc_te) {
@@ -116,11 +118,19 @@ public class OcassionsList {
 	}
 
 	public String getDay_desc_en() {
-		return day_desc_en;
+		return WordUtils.capitalizeFully(day_desc_en);
 	}
 
 	public void setDay_desc_en(String day_desc_en) {
 		this.day_desc_en = day_desc_en;
+	}
+
+	public int getSamvathsaram_id() {
+		return samvathsaram_id;
+	}
+
+	public void setSamvathsaram_id(int samvathsaram_id) {
+		this.samvathsaram_id = samvathsaram_id;
 	}
 
 }

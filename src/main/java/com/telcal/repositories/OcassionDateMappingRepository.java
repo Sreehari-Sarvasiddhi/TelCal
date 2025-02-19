@@ -17,4 +17,7 @@ public interface OcassionDateMappingRepository extends JpaRepository<OcassionsLi
 
 	@Query(value = "SELECT e FROM OcassionsList e WHERE year_number = YEAR(:date) order by ocassion_date")
 	List<OcassionsList> findAllOcassionsByYear(LocalDate date);
+
+	@Query(value = "SELECT e FROM OcassionsList e WHERE samvathsaram_id = :samvathsaram order by ocassion_date")
+	List<OcassionsList> findAllOcassionsBySamvathsaram(int samvathsaram);
 }
