@@ -20,4 +20,10 @@ public interface OcassionDateMappingRepository extends JpaRepository<OcassionsLi
 
 	@Query(value = "SELECT e FROM OcassionsList e WHERE samvathsaram_id = :samvathsaram order by ocassion_date")
 	List<OcassionsList> findAllOcassionsBySamvathsaram(int samvathsaram);
+
+	@Query(value = "SELECT e FROM OcassionsList e WHERE ocassion_date between :startDate AND :endDate")
+	List<OcassionsList> getDataByDateRange(LocalDate startDate, LocalDate endDate);
+
+	@Query(value = "SELECT e FROM OcassionsList e WHERE ocassion_date = :date")
+	List<OcassionsList> getDataByDate(LocalDate date);
 }

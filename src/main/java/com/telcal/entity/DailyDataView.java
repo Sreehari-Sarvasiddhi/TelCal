@@ -65,10 +65,10 @@ public class DailyDataView {
 	private String sunset;
 
 	@Transient
-	private List<String> occasionEn;
+	private String occasionEn;
 
 	@Transient
-	private List<String> occasionTe;
+	private String occasionTe;
 
 	private String samvathsaram_peru;
 	private String ayanam_peru;
@@ -272,19 +272,19 @@ public class DailyDataView {
 		this.sunset = sunset;
 	}
 
-	public List<String> getOccasionEn() {
+	public String getOccasionEn() {
 		return occasionEn;
 	}
 
-	public void setOccasionEn(List<String> occasionEn) {
+	public void setOccasionEn(String occasionEn) {
 		this.occasionEn = occasionEn;
 	}
 
-	public List<String> getOccasionTe() {
+	public String getOccasionTe() {
 		return occasionTe;
 	}
 
-	public void setOccasionTe(List<String> occasionTe) {
+	public void setOccasionTe(String occasionTe) {
 		this.occasionTe = occasionTe;
 	}
 

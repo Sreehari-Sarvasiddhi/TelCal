@@ -21,14 +21,14 @@ import com.telcal.data.UserData;
 import com.telcal.entity.Amrutham;
 import com.telcal.entity.DailyDataView;
 import com.telcal.entity.Durmuhurtham;
-import com.telcal.entity.Ocassions;
+import com.telcal.entity.OcassionsList;
 import com.telcal.entity.Varjyam;
 import com.telcal.repositories.AmruthamRepo;
 import com.telcal.repositories.DailyDataRepo;
 import com.telcal.repositories.DailyDataViewRepo;
 import com.telcal.repositories.DurmuhurthamRepo;
 import com.telcal.repositories.MonthRepo;
-import com.telcal.repositories.OcassionsRepo;
+import com.telcal.repositories.OcassionDateMappingRepository;
 import com.telcal.repositories.VarjyamRepo;
 import com.telcal.util.DailyDataOrdinalUtil;
 import com.telcal.util.DateTimeUtils;
@@ -52,14 +52,13 @@ public class DailyDataController {
 	VarjyamRepo varjyamRepo;
 
 	@Autowired
-	OcassionsRepo ocassionsRepo;
+	OcassionDateMappingRepository ocassionsRepo;
 
 	@Autowired
 	DurmuhurthamRepo durmuhurthamRepo;
 
 	@Autowired
 	MonthRepo monthRepo;
-//	
 
 	@Autowired
 	DailyDataOrdinalUtil ordinalUtil;
@@ -97,8 +96,8 @@ public class DailyDataController {
 		List<Durmuhurtham> durmuhurthamData = durmuhurthamRepo
 				.findByDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
 
-		List<Ocassions> ocassionsData = ocassionsRepo
-				.findByDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
+		List<OcassionsList> ocassionsData = ocassionsRepo
+				.getDataByDate(DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(date)));
 
 		if (repoResult.size() == 0) {
 			List<DailyDataView> respList = new ArrayList<>();
@@ -169,8 +168,10 @@ public class DailyDataController {
 							return list;
 						})));
 
-				k.setOccasionEn(ocassionsData.stream().map(item -> item.getOcassion_en()).toList());
-				k.setOccasionTe(ocassionsData.stream().map(item -> item.getOcassion_te()).toList());
+				k.setOccasionEn(
+						String.join(" / ", ocassionsData.stream().map(item -> item.getOcassion_name()).toList()));
+				k.setOccasionTe(
+						String.join(" / ", ocassionsData.stream().map(item -> item.getOcassion_peru()).toList()));
 
 			});
 

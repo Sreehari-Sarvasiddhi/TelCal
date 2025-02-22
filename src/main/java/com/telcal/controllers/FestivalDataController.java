@@ -20,20 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.telcal.data.MoonDataRequest;
-import com.telcal.entity.DailyData;
 import com.telcal.entity.OcassionsList;
-import com.telcal.repositories.DailyDataRepo;
 import com.telcal.repositories.OcassionDateMappingRepository;
-import com.telcal.transformers.LocalDateToStringConverter;
 import com.telcal.util.DateTimeUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
-public class MoonDataController {
-
-	@Autowired
-	DailyDataRepo dailyDataRepo;
+public class FestivalDataController {
 
 	@Autowired
 	OcassionDateMappingRepository repo;
@@ -41,7 +35,7 @@ public class MoonDataController {
 	@Autowired
 	DailyDataController dailyDataController;
 
-	@PostMapping("/getMoonDataByDateRange")
+	@PostMapping("/getFestivalDataByDateRange")
 	@CrossOrigin(originPatterns = { "*://*/*" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
 			RequestMethod.DELETE }, allowedHeaders = { "Content-Type", "Accept", "X-Requested-With",
 					"Authorization" }, exposedHeaders = { "Location", "Content-Disposition", "Content-Type", "Accept",
@@ -54,29 +48,14 @@ public class MoonDataController {
 		if (!httpRequest.getHeader("Access-Control-Allow-Origin").isEmpty())
 			origin = httpRequest.getHeader("Access-Control-Allow-Origin").toString();
 
-		List<DailyData> dailyData = dailyDataRepo.getDataByDateRange(
-				DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(req.getStartDate())),
-				DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(req.getEndDate())));
-
 		List<OcassionsList> dataByDateRange = repo.getDataByDateRange(
 				DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(req.getStartDate())),
 				DateTimeUtils.convertStringtoLocalDate(DateTimeUtils.convertDateStringFormat(req.getEndDate())));
-
-		for (DailyData data : dailyData) {
-			String date = LocalDateToStringConverter.convertLocalDatetoString(data.getDate());
-			if (!moonData.containsKey(date)) {
-				moonData.put(date, new ArrayList<>(Arrays.asList(data.getT_thidhi_id())));
-			} else if (!moonData.get(date).contains(data.getT_thidhi_id())) {
-				moonData.get(date).add(data.getT_thidhi_id());
-			}
-		}
 
 		for (OcassionsList data : dataByDateRange) {
 			String date = data.getOcassion_date();
 			if (!moonData.containsKey(date)) {
 				moonData.put(date, new ArrayList<>(Arrays.asList(99L)));
-			} else if (!moonData.get(date).contains(99L)) {
-				moonData.get(date).add(99L);
 			}
 		}
 
